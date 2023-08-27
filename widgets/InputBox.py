@@ -10,15 +10,18 @@ class InputBox(QWidget):
         self.text_edit.setPlaceholderText("Type a message...")
         
         # Create a QPushButton
-        self.button = QPushButton("Send")
-        self.button.clicked.connect(self.handleSend)
+        self.sendButton = QPushButton("Send")
+        self.popButton = QPushButton("Pop")
+        self.sendButton.clicked.connect(self.handleSend)
+        self.popButton.clicked.connect(self.handlePop)
         
         # Create a horizontal layout
         layout = QHBoxLayout()
         
         # Add widgets to the layout
         layout.addWidget(self.text_edit)
-        layout.addWidget(self.button)
+        layout.addWidget(self.popButton)
+        layout.addWidget(self.sendButton)
         
         # Set the layout for this widget
         self.setLayout(layout)
@@ -26,3 +29,5 @@ class InputBox(QWidget):
 
     def handleSend(self):
         self.parent().addNewMessage()
+    def handlePop(self):
+        self.parent().popMessage()

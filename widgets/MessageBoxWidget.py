@@ -33,10 +33,11 @@ class MessageBoxWidget(QWidget):
         self.layout.addWidget(message_widget)
 
     def popMessage(self):
-        message_widget = self.message_widgets.pop()
-        self.layout.removeWidget(message_widget)
-        message_widget.deleteLater()
-        return message_widget
+        if len(self.message_widgets) > 0:
+            message_widget = self.message_widgets.pop()
+            self.layout.removeWidget(message_widget)
+            message_widget.deleteLater()
+            return message_widget
         
     # This method ensures the custom stylesheet works properly
     def paintEvent(self, e):

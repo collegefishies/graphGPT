@@ -22,5 +22,9 @@ class ChatBoxWidget(QWidget):
 
     def addNewMessage(self):
         new_message = self.input_box.text_edit.toPlainText()
-        self.message_box.addMessage(new_message)
-        self.input_box.text_edit.clear()
+        if len(new_message) > 0:
+            self.message_box.addMessage(new_message)
+            self.input_box.text_edit.clear()
+
+    def popMessage(self):
+        return self.message_box.popMessage()
