@@ -19,3 +19,8 @@ class ChatBoxWidget(QWidget):
         
         # Set the layout for this widget
         self.setLayout(layout)
+
+    def addNewMessage(self):
+        new_message = self.input_box.text_edit.toPlainText()
+        self.message_box.addMessage(new_message)
+        self.input_box.text_edit.clear()

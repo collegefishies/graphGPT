@@ -8,6 +8,7 @@ from . import MessageWidget
 class MessageBoxWidget(QWidget):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.message_widgets = []
         
         # Create a QVBoxLayout to stack MessageWidget instances
         self.layout = QVBoxLayout()
@@ -24,11 +25,18 @@ class MessageBoxWidget(QWidget):
             }
         """)
         self.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Expanding)
-        
+
 
     def addMessage(self, message):
         message_widget = MessageWidget(message)
+        self.message_widgets.append(message_widget)
         self.layout.addWidget(message_widget)
+
+    def popMessage(self):
+        message_widget = self.message_widgets.pop()
+        self.layout.removeWidget(message_widget)
+        message_widget.deleteLater()
+        return message_widget
         
     # This method ensures the custom stylesheet works properly
     def paintEvent(self, e):

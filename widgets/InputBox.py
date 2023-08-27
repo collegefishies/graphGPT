@@ -11,6 +11,7 @@ class InputBox(QWidget):
         
         # Create a QPushButton
         self.button = QPushButton("Send")
+        self.button.clicked.connect(self.handleSend)
         
         # Create a horizontal layout
         layout = QHBoxLayout()
@@ -22,3 +23,6 @@ class InputBox(QWidget):
         # Set the layout for this widget
         self.setLayout(layout)
         self.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Preferred)
+
+    def handleSend(self):
+        self.parent().addNewMessage()
