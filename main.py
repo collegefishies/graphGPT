@@ -1,6 +1,6 @@
 from PyQt6 import QtWidgets, QtGui
 from PyQt6.QtWidgets import QApplication, QMainWindow
-from widgets import ChatBoxWidget, MessageBoxWidget, MessageWidget, InputBox
+from widgets import ChatBoxWidget, MessageBoxWidget, MessageWidget, InputBox, TreeGraph
 import sys
 
 messages = ["Hello", "World", "This", "Is", "A", "Test", "Message"]
@@ -16,13 +16,17 @@ def main():
 	win.setCentralWidget(central_widget)
 
 	# Create a QVBoxLayout and set it to the central widget
-	vlayout = QtWidgets.QVBoxLayout()
-	central_widget.setLayout(vlayout)
+	hlayout = QtWidgets.QHBoxLayout()
+	central_widget.setLayout(hlayout)
 
 	# Create an instance of ChatBoxWidget and set it to the central widget
 	chat_box = ChatBoxWidget()
-	vlayout.addWidget(chat_box)
+	hlayout.addWidget(chat_box)
 
+	#Create the Tree Graph
+	tree_graph = TreeGraph()
+	hlayout.addWidget(tree_graph)
+	
 	win.show()
 	sys.exit(app.exec())
 

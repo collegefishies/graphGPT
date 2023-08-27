@@ -3,3 +3,4 @@ from .InputBox import *
 from .MessageWidget import *
 from .MessageBoxWidget import *
 from .ChatBoxWidget import *
+from .TreeGraph import *
