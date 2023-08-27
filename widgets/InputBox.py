@@ -1,4 +1,5 @@
 from PyQt6.QtWidgets import QWidget, QHBoxLayout, QPushButton
+from PyQt6.QtWidgets import QSizePolicy
 from . import AutoExpandingTextEdit
 class InputBox(QWidget):
     def __init__(self, *args, **kwargs):
@@ -20,3 +21,4 @@ class InputBox(QWidget):
         
         # Set the layout for this widget
         self.setLayout(layout)
+        self.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Preferred)

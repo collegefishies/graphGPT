@@ -17,13 +17,13 @@ class MessageWidget(QWidget):
         self.message_label.setMinimumHeight(self.min_height)
         self.message_label.setContentsMargins(0, self.message_padding, 0, self.message_padding)
         
-        self.button = QPushButton("Button")
+        self.button = QPushButton("^")
         self.button.setFixedSize(40, 40)
         
         # Create horizontal layout
         layout = QHBoxLayout()
         layout.addWidget(self.user_icon)
         layout.addWidget(self.message_label, 1)  # The '1' makes this widget expand to fill available space
-        layout.addWidget(self.button)
+        # layout.addWidget(self.button)
         
         self.setLayout(layout)

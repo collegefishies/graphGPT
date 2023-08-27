@@ -1,6 +1,6 @@
 from PyQt6 import QtWidgets, QtGui
 from PyQt6.QtWidgets import QApplication, QMainWindow
-from widgets import AutoExpandingTextEdit, InputBox, MessageWidget
+from widgets import ChatBoxWidget, MessageBoxWidget, MessageWidget, InputBox
 import sys
 
 messages = ["Hello", "World", "This", "Is", "A", "Test", "Message"]
@@ -19,14 +19,9 @@ def main():
 	vlayout = QtWidgets.QVBoxLayout()
 	central_widget.setLayout(vlayout)
 
-	# Create and add the MessageWidget
-	for msg in messages:
-		message_widget = MessageWidget(msg)
-		vlayout.addWidget(message_widget)
-
-	# Create and set the InputBox
-	input_box = InputBox()
-	vlayout.addWidget(input_box)
+	# Create an instance of ChatBoxWidget and set it to the central widget
+	chat_box = ChatBoxWidget()
+	vlayout.addWidget(chat_box)
 
 	win.show()
 	sys.exit(app.exec())
