@@ -66,7 +66,7 @@ def main():
 	curr = root
 	i = 0
 	while True:
-		user_input = input("#BR,BK,MW>")
+		user_input = input("#BR,BK,MW,S,L>")
 		if user_input == "#BR":
 			break
 		elif user_input == "#BK":
@@ -76,6 +76,11 @@ def main():
 				curr = curr.parent
 		elif user_input == "#MW":
 			print(root)
+		elif user_input == "#S":
+			root.save_conversation_tree()
+		elif user_input == "#L":
+			root = ConversationNode.load_conversation_tree()
+			curr = root
 		else:
 			ncurr = ConversationNode(user_input, f"User {i%2 + 1}")
 			i += 1
