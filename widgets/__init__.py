@@ -1,3 +1,6 @@
+'''
+Contains the PyQt Widgets that make up the GUI.
+'''
 from .AutoExpandingTextEdit import *
 from .InputBox import *
 from .MessageWidget import *

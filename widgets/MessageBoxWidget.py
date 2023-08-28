@@ -6,6 +6,9 @@ from PyQt6.QtWidgets import QSizePolicy
 from . import MessageWidget
 
 class MessageBoxWidget(QWidget):
+    '''
+        Contains many MessageWidgets
+    '''
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.message_widgets = []

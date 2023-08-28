@@ -1,3 +1,6 @@
+'''
+	The executable for the GUI interface
+'''
 from PyQt6 import QtWidgets, QtGui
 from PyQt6.QtWidgets import QApplication, QMainWindow
 from widgets import ChatBoxWidget, MessageBoxWidget, MessageWidget, InputBox, TreeGraph
