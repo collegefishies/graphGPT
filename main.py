@@ -5,7 +5,6 @@ import sys, os
 from PyQt6 import QtWidgets, QtGui
 from PyQt6.QtWidgets import QApplication, QMainWindow, QFileDialog
 from widgets import ChatBoxWidget, TreeGraph
-sys.path.append('/Users/enrique/Documents/python/graphGPT')
 
 class MainWindow(QMainWindow):
 	def __init__(self):
@@ -47,8 +46,8 @@ class MainWindow(QMainWindow):
 		layout = QtWidgets.QHBoxLayout()
 		central_widget.setLayout(layout)
 
-		chat_box = ChatBoxWidget()
-		layout.addWidget(chat_box)
+		self.chat_box = ChatBoxWidget()
+		layout.addWidget(self.chat_box)
 
 		tree_graph = TreeGraph()
 		layout.addWidget(tree_graph)
@@ -65,6 +64,7 @@ class MainWindow(QMainWindow):
 		options = dialog.options()
 		filename, _ = QFileDialog.getSaveFileName(self, "Save File", "", "All Files (*);;Conversation Files (*.conv)", options=options)
 		if filename:
+			self.filename = filename
 			self.save_file()
 
 	def load_file(self, filename):
@@ -81,15 +81,25 @@ class MainWindow(QMainWindow):
 		else:
 			self.setWindowTitle(f"graphGPT - *Untitled*")
 
-	def save_file(self):
-		self.changed = False
-		if not self.filename:
-			self.save_file_dialog()
-		#update title
-		#use short filename
+	def set_window_title(self):
 		filename = self.filename.split("/")[-1]
 		self.setWindowTitle(f"graphGPT - {filename}")
 
+	def save_conversation(self):
+		widgets = self.chat_box.message_box.message_widgets
+		root = widgets[0].node if widgets else None
+		curr = self.chat_box.message_box.current_message.node if widgets else None
+		root.save_conversation_tree(self.filename, curr)
+
+	def save_file(self):
+		print("in savefile")
+		self.changed = False
+		print(self.filename)
+		if self.filename is None:
+			self.save_file_dialog()
+		else:
+			self.set_window_title()
+			self.save_conversation()
 
 
 def main():
