@@ -29,7 +29,7 @@ class MainWindow(QMainWindow):
 
 		actions = [
 			("Open", "Ctrl+O", self.open_file_dialog),
-			("Save", "Ctrl+S", self.save_file_dialog),
+			("Save", "Ctrl+S", self.save_file),
 			("Save As", "Ctrl+Shift+S", self.save_file_dialog)
 		]
 
@@ -64,7 +64,7 @@ class MainWindow(QMainWindow):
 		options = dialog.options()
 		filename, _ = QFileDialog.getSaveFileName(self, "Save File", "", "All Files (*);;Conversation Files (*.conv)", options=options)
 		if filename:
-			self.save_file(filename)
+			self.save_file()
 
 	def load_file(self, filename):
 		self.filename = filename
@@ -80,12 +80,13 @@ class MainWindow(QMainWindow):
 		else:
 			self.setWindowTitle(f"graphGPT - *Untitled*")
 
-	def save_file(self, filename):
+	def save_file(self):
 		self.changed = False
-		self.filename = filename
+		if not self.filename:
+			self.save_file_dialog()
 		#update title
 		#use short filename
-		filename = filename.split("/")[-1]
+		filename = self.filename.split("/")[-1]
 		self.setWindowTitle(f"graphGPT - {filename}")
 
 
