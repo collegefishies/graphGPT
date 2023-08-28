@@ -16,23 +16,23 @@ Features:
 Tutorial:
 1. Create a root node:
 
-	`root = ConversationNode(user="ROBOT", text="Hey, who is this?")`
+	root = ConversationNode(user="ROBOT", text="Hey, who is this?")
 
 2. Add child nodes:
 
-	`resp1 = ConversationNode("Enrique", "EM")`
-	`root.add(resp1)`
+	resp1 = ConversationNode("Enrique", "EM")
+	root.add(resp1)
 
 3. Navigate through the conversation:
-	`curr = resp1`
+	curr = resp1
 
 4. Save the conversation to a file:
 
-	`root.save_conversation_tree(curr=curr)`
+	root.save_conversation_tree(curr=curr)
 
 5. Load the conversation from a file:
 
-	`root, curr = ConversationNode.load_conversation_tree()`
+	root, curr = ConversationNode.load_conversation_tree()
 """
 
 import json
