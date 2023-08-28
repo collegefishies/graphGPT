@@ -1,10 +1,11 @@
 '''
 	The executable for the GUI interface
 '''
-import sys
+import sys, os
 from PyQt6 import QtWidgets, QtGui
 from PyQt6.QtWidgets import QApplication, QMainWindow, QFileDialog
 from widgets import ChatBoxWidget, TreeGraph
+sys.path.append('/Users/enrique/Documents/python/graphGPT')
 
 class MainWindow(QMainWindow):
 	def __init__(self):
@@ -99,4 +100,5 @@ def main():
 
 if __name__ == "__main__":
 	print("##### Main Start #####")
+	print(os.getcwd())
 	main()

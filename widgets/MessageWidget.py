@@ -8,6 +8,7 @@ Classes:
 """
 
 from PyQt6.QtWidgets import QWidget, QLabel, QPushButton, QHBoxLayout
+from ConversationNode import ConversationNode
 
 class MessageWidget(QWidget):
     """A QWidget subclass to display a message in a chat application.
@@ -21,15 +22,17 @@ class MessageWidget(QWidget):
     def __init__(self, message, *args, **kwargs):
         """Initialize the MessageWidget with a given message."""
         super().__init__(*args, **kwargs)
+        self.node = None
         self._initConstants()
         self._initUI(message)
+
         
     def _initConstants(self):
         """Initialize constants used in the widget."""
         self.min_height = 50
         self.message_padding = 10
         
-    def _initUI(self, message):
+    def _initUI(self, message,):
         """Initialize the user interface components."""
         self._createUserIcon()
         self._createMessageLabel(message)
@@ -39,6 +42,8 @@ class MessageWidget(QWidget):
         """Create user icon."""
         self.user_icon = QLabel("👤")
 
+    def defineNode(self, node):
+        self.node = node
     def _createMessageLabel(self, message):
         """Create message label."""
         self.message_label = QLabel(message)
