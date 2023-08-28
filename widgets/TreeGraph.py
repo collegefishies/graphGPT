@@ -1,3 +1,8 @@
+'''
+**WIP** - This is a work in progress.
+
+Contains functions for displaying the graph of the conversation tree.
+'''
 from PyQt6.QtWidgets import QGraphicsView, QGraphicsScene, QGraphicsEllipseItem, QGraphicsLineItem, QApplication
 from PyQt6.QtCore import Qt, QRectF, QPointF
 from PyQt6.QtGui import QBrush, QColor

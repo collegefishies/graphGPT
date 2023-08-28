@@ -4,27 +4,35 @@ Each node stores the user who sent the message and the text of the message.
 Nodes can have children, which represent replies or follow-up messages.
 
 Features:
+
 - Add child nodes to simulate a conversation.
+
 - Print the conversation from any node to the root.
+
 - Serialize the conversation tree to a JSON file.
+
 - Deserialize a conversation tree from a JSON file.
 
 Tutorial:
 1. Create a root node:
-	root = ConversationNode(user="ROBOT", text="Hey, who is this?")
+
+	`root = ConversationNode(user="ROBOT", text="Hey, who is this?")`
 
 2. Add child nodes:
-	resp1 = ConversationNode("Enrique", "EM")
-	root.add(resp1)
+
+	`resp1 = ConversationNode("Enrique", "EM")`
+	`root.add(resp1)`
 
 3. Navigate through the conversation:
-	curr = resp1
+	`curr = resp1`
 
 4. Save the conversation to a file:
-	root.save_conversation_tree(curr=curr)
+
+	`root.save_conversation_tree(curr=curr)`
 
 5. Load the conversation from a file:
-	root, curr = ConversationNode.load_conversation_tree()
+
+	`root, curr = ConversationNode.load_conversation_tree()`
 """
 
 import json

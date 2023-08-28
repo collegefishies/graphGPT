@@ -1,49 +1,71 @@
-from PyQt6.QtWidgets import QWidget, QVBoxLayout, QStyle, QStyleOption
+"""
+
+This module contains the MessageBoxWidget class, which serves as a container
+for MessageWidget instances in a chat application.
+
+Classes:
+    - MessageBoxWidget: A QWidget subclass that holds and manages multiple MessageWidgets.
+"""
+
+from PyQt6.QtWidgets import QWidget, QVBoxLayout, QStyle, QStyleOption, QSizePolicy
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QPainter
-from PyQt6.QtWidgets import QSizePolicy
-
 from . import MessageWidget
 
 class MessageBoxWidget(QWidget):
-    '''
-        Contains many MessageWidgets
-    '''
+    """A container widget for multiple MessageWidgets.
+
+    This class serves as the vertical container for MessageWidgets to display messages
+    in a chat application.
+
+    Methods:
+        - addMessage: Adds a new MessageWidget with the given message.
+        - popMessage: Removes and returns the oldest MessageWidget.
+    """
+    
     def __init__(self, *args, **kwargs):
+        """Initialize the MessageBoxWidget."""
         super().__init__(*args, **kwargs)
         self.message_widgets = []
+        self._initUI()
         
-        # Create a QVBoxLayout to stack MessageWidget instances
+    def _initUI(self):
+        """Initialize the user interface components."""
+        self._setupLayout()
+        self._setupStyleSheet()
+        self.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Expanding)
+
+    def _setupLayout(self):
+        """Setup the QVBoxLayout to house MessageWidgets."""
         self.layout = QVBoxLayout()
         self.layout.setAlignment(Qt.AlignmentFlag.AlignTop)
-        
         self.setLayout(self.layout)
-        
-        # Set background color using stylesheet
-        # Lighter in dark mode, darker in light mode
+
+    def _setupStyleSheet(self):
+        """Setup the stylesheet for this widget."""
         self.setAutoFillBackground(True)
         self.setStyleSheet("""
             MessageBoxWidget {
-                background-color: rgba(0, 0, 0, 20%);  /* for dark mode */
+                background-color: rgba(0, 0, 0, 20%);
             }
         """)
-        self.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Expanding)
-
-
+        
     def addMessage(self, message):
+        """Add a new MessageWidget with the given message."""
         message_widget = MessageWidget(message)
         self.message_widgets.append(message_widget)
         self.layout.addWidget(message_widget)
 
     def popMessage(self):
-        if len(self.message_widgets) > 0:
-            message_widget = self.message_widgets.pop()
+        """Remove and return the oldest MessageWidget."""
+        if self.message_widgets:
+            message_widget = self.message_widgets.pop(0)
             self.layout.removeWidget(message_widget)
             message_widget.deleteLater()
             return message_widget
-        
-    # This method ensures the custom stylesheet works properly
+
     def paintEvent(self, e):
+        """Ensure the custom stylesheet works properly."""
         option = QStyleOption()
         option.initFrom(self)
         painter = QPainter(self)
