@@ -26,8 +26,12 @@ class MessageBoxWidget(QWidget):
     def __init__(self, *args, **kwargs):
         """Initialize the MessageBoxWidget."""
         super().__init__(*args, **kwargs)
-        self.message_widgets = []
-        self.current_message = None
+        root_message_widget = MessageWidget("")
+        root_node = ConversationNode("", "root")
+        root_message_widget.node = root_node
+
+        self.message_widgets = [root_message_widget]
+        self.current_message = root_message_widget
         self._initUI()
         
     def _initUI(self):
@@ -73,13 +77,13 @@ class MessageBoxWidget(QWidget):
 
     def popMessage(self):
         """Remove and return the oldest MessageWidget."""
-        if self.message_widgets:
+        if len(self.message_widgets) > 1:
             message_widget = self.message_widgets.pop()
             self.layout.removeWidget(message_widget)
             message_widget.deleteLater()
 
             #update self.current_message
-            self.current_message = self.message_widgets[0] if self.message_widgets else None
+            self.current_message = self.message_widgets[-1] if self.message_widgets else None
 
             return message_widget
 
