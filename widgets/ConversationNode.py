@@ -36,6 +36,7 @@ Tutorial:
 """
 
 import json
+import tiktoken
 
 class ConversationNode:
 	"""
@@ -48,6 +49,8 @@ class ConversationNode:
 		parent (ConversationNode): The parent node.
 		children (list): The child nodes.
 	"""
+	encoding = tiktoken.encoding_for_model("gpt-3.5-turbo")
+
 	def __init__(self, text="None", user="N/A"):
 		"""
 		Initializes a ConversationNode with text and user.
@@ -56,9 +59,11 @@ class ConversationNode:
 			text (str): The text of the message. Defaults to "None".
 			user (str): The user who sent the message. Defaults to "N/A".
 		"""
+
 		self.user = user
 		self.text = text
 		self.depth = 0
+		self.tokens = len(encoding.encode(text))
 		self.parent = None
 		self.children = []
 
