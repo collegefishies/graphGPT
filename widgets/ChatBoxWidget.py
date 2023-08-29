@@ -10,7 +10,7 @@ Classes:
 
 from PyQt6.QtWidgets import QWidget, QVBoxLayout
 from . import InputBox, MessageBoxWidget
-
+from ChatGPT import response
 class ChatBoxWidget(QWidget):
     """A widget that combines MessageBoxWidget and InputBox into a chat interface.
 
@@ -43,6 +43,7 @@ class ChatBoxWidget(QWidget):
         if new_message:
             self.message_box.addMessage(new_message)
             self.input_box.text_edit.clear()
+
     def popMessage(self):
         """Remove and return the oldest message from MessageBoxWidget."""
         return self.message_box.popMessage()
