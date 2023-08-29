@@ -18,6 +18,9 @@ class TreeGraph(QGraphicsView):
 
         # Create a QGraphicsScene
         self.scene = QGraphicsScene()
+        #keep your copy of the root node.
+        self.root = None
+        self.curr = None
 
         # Create nodes (circles)
         circle1 = ClickableCircle(QRectF(0, 0, 50, 50))
@@ -38,7 +41,10 @@ class TreeGraph(QGraphicsView):
 
         # Set the scene
         self.setScene(self.scene)
-
+    def update(self, root, curr):
+        print("Update called.")
+        self.root = root
+        self.curr = curr
 if __name__ == "__main__":
     app = QApplication(sys.argv)
     view = TreeGraph()

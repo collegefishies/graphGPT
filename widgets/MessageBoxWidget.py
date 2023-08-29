@@ -8,7 +8,7 @@ Classes:
 """
 
 from PyQt6.QtWidgets import QWidget, QVBoxLayout, QStyle, QStyleOption, QSizePolicy
-from PyQt6.QtCore import Qt
+from PyQt6.QtCore import Qt, pyqtSignal
 from PyQt6.QtGui import QPainter
 from . import MessageWidget
 from ConversationNode import ConversationNode
@@ -22,6 +22,7 @@ class MessageBoxWidget(QWidget):
         - addMessage: Adds a new MessageWidget with the given message.
         - popMessage: Removes and returns the oldest MessageWidget.
     """
+    changed_signal = pyqtSignal(ConversationNode, ConversationNode)
     
     def __init__(self, *args, **kwargs):
         """Initialize the MessageBoxWidget."""
@@ -64,7 +65,9 @@ class MessageBoxWidget(QWidget):
         main_window = central_widget.parent()
         main_window.changed = True
         main_window.update_title()
-
+        self.changed_signal.emit(self.root(), self.current_message.node)
+    def root(self):
+        return self.message_widgets[0].node
     def addMessage(self, message, node=None):
         """Add a new MessageWidget with the given message."""
         message_widget = MessageWidget(message)

@@ -53,6 +53,10 @@ class MainWindow(QMainWindow):
 		tree_graph = TreeGraph()
 		layout.addWidget(tree_graph)
 
+		#connect signals
+		self.chat_box.message_box.changed_signal.connect(tree_graph.update)
+		
+
 	def open_file_dialog(self):
 		dialog = QFileDialog()
 		options = dialog.options()
@@ -69,7 +73,7 @@ class MainWindow(QMainWindow):
 			self.filename = filename
 			self.save_file()
 			self.set_window_title()
-			
+
 
 
 	def load_file(self, filename):
