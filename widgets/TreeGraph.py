@@ -92,35 +92,46 @@ class TreeGraph(QGraphicsView):
     def populateScene(self, root, curr):
         self.clear()
 
-        queue = deque()
-        # seen = set()
-        queue.append((root, None, None))
-        r = self.radius
-        dx, dy = 3*r, 3*r
-        depth = -1
-        while queue:
-            print(queue)
-            #draw all the circles
-            width = len(queue)
-            depth += 1
-            mean = (width - 1) * (3*r)/2
-            #draw the parents circles
-            for i in range(len(queue)):
-                node, px, py = queue.popleft()
-                #calculate position of new node.
-                x = 0 if px is None else i*dx - mean
-                y = 0 if py is None else py + dy
+        _pass = "line"
+        while _pass != "done":
+            queue = deque()
+            seen = set()
+            queue.append((root, None, None))
+            r = self.radius
+            dx, dy = 3*r, 3*r
+            depth = -1
+            while queue:
+                print(queue)
+                #draw all the circles
+                width = len(queue)
+                depth += 1
+                mean = (width - 1) * (3*r)/2
+                #draw the parents circles
+                for i in range(len(queue)):
+                    node, px, py = queue.popleft()
+                    if node not in seen:
+                        seen.add(node)
+                        #calculate position of new node.
+                        x = 0 if px is None else i*dx - mean
+                        y = 0 if py is None else py + dy
+                        
+                        if _pass == "line":
+                            if px is not None and py is not None:
+                                self.addLine(x, y, px, py)
+                        else:
+                            self.addCircle(x, y, node)
 
-                if px is not None and py is not None:
-                    self.addLine(x, y, px, py)
-                self.addCircle(x, y, node)
 
+                        for child in node.children:
+                            #parents x, parents y
+                            px = x
+                            py = y
+                            queue.append((child, px, py))
+            if _pass == "line":
+                _pass = "circle"
+            else:
+                _pass = "done"
 
-                for child in node.children:
-                    #parents x, parents y
-                    px = x
-                    py = y
-                    queue.append((child, px, py))
 
     def addLine(self, x1, y1, x2, y2):
         r = self.radius
