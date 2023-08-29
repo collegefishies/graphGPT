@@ -8,7 +8,7 @@ Classes:
 """
 
 from PyQt6.QtWidgets import QWidget, QVBoxLayout, QStyle, QStyleOption, QSizePolicy, QScrollArea
-from PyQt6.QtCore import Qt, pyqtSignal
+from PyQt6.QtCore import Qt, pyqtSignal, QTimer
 from PyQt6.QtGui import QPainter
 from . import MessageWidget
 from ConversationNode import ConversationNode
@@ -42,6 +42,17 @@ class MessageBoxWidget(QWidget):
     def _initUI(self):
         """Initialize the user interface components."""
         self._setupLayout()
+        self.inner_widget = QWidget()
+        self.inner_widget.setLayout(self.layout)
+
+        self.scroll_area = QScrollArea()
+        self.scroll_area.setWidgetResizable(True)
+        self.scroll_area.setWidget(self.inner_widget)
+        self.scroll_area.verticalScrollBar().rangeChanged.connect(self._scrollToBottom)
+
+        main_layout = QVBoxLayout(self)
+        main_layout.addWidget(self.scroll_area)
+
         self._setupStyleSheet()
         self.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Expanding)
                 
@@ -56,9 +67,17 @@ class MessageBoxWidget(QWidget):
         self.setAutoFillBackground(True)
         self.setStyleSheet("""
             MessageBoxWidget {
-                background-color: rgba(0, 0, 0, 0.2);
+                background-color: rgba(0, 0, 0, 0.1);
+            }
+            QScrollArea {
+                # border: none;
+                background-color: rgba(0, 0, 0, 0.1);
+            }
+            QWidget {
+                background-color: rgba(0, 0, 0, 0.1);
             }
         """)
+
     
     def _markChange(self):
         chatbox = self.parent()
@@ -90,6 +109,8 @@ class MessageBoxWidget(QWidget):
         root_node = self.message_widgets[0].node
         print(root_node)
 
+
+
         if not robot:
 
             # resp = response(messages)
@@ -98,7 +119,10 @@ class MessageBoxWidget(QWidget):
 
         self._markChange()
         
-
+    def _scrollToBottom(self):
+        scrollbar = self.scroll_area.verticalScrollBar()
+        scrollbar.setValue(scrollbar.maximum())
+        
     def _populate(self, root, curr):
         """Populate the MessageBoxWidget with the given conversation nodes."""
         self.deleteConversation()
