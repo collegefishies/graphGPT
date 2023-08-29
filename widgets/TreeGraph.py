@@ -3,9 +3,9 @@
 
 Contains functions for displaying the graph of the conversation tree.
 '''
-from PyQt6.QtWidgets import QGraphicsView, QGraphicsScene, QGraphicsEllipseItem, QGraphicsLineItem, QApplication
+from PyQt6.QtWidgets import QGraphicsView, QGraphicsScene, QGraphicsEllipseItem, QGraphicsLineItem, QApplication, QGraphicsObject
 from PyQt6.QtCore import Qt, QRectF, QPointF, pyqtSignal
-from PyQt6.QtGui import QBrush, QColor
+from PyQt6.QtGui import QBrush, QColor, QPainter
 from collections import deque
 from ConversationNode import ConversationNode
 import sys
@@ -21,16 +21,34 @@ class Node:
         x.parent = self
         self.children.append(x)
 
-class ClickableCircle(QGraphicsEllipseItem):
+class ClickableCircle(QGraphicsObject):
     clicked = pyqtSignal(ConversationNode)
 
     def __init__(self, rect, node):
-        super().__init__(rect)
+        super().__init__()
         self.node = node
+        self.rect = rect
+        self.brush = QBrush(QColor("blue"))
+
+    def boundingRect(self):
+        return self.rect
+
+    def paint(self, painter: QPainter, option, widget):
+        painter.setRenderHint(QPainter.RenderHint.Antialiasing)
+        painter.setBrush(self.brush)
+        
+        pen = painter.pen()
+        pen.setColor(QColor("black"))  # Set the circle's border color here
+        painter.setPen(pen)
+        
+        painter.drawEllipse(self.rect)
 
     def mousePressEvent(self, event):
         print(f"Circle clicked! Conversation ID: {self.node}")
         self.clicked.emit(self.node)
+    def setFillColor(self, color_name):
+        self.brush.setColor(QColor(color_name))
+        self.update()  # Trigger repaint
 
 class TreeGraph(QGraphicsView):
     def __init__(self, *args, **kwargs):
@@ -58,13 +76,13 @@ class TreeGraph(QGraphicsView):
         r = self.radius
         circle = ClickableCircle(QRectF(x, y, 2*r, 2*r), node)
         if node == self.curr:
-            circle.setBrush(QBrush(QColor("green")))
+            circle.setFillColor("green")
         elif node == self.root:
-            circle.setBrush(QBrush(QColor("red")))
+            circle.setFillColor("red")
         else:
-            circle.setBrush(QBrush(QColor("grey")))
+            circle.setFillColor("grey")
         circle.node = node
-        circle.clicked.connect(self.onCircleClicke)
+        circle.clicked.connect(self.onCircleClicked)
         self.scene.addItem(circle)
 
     def onCircleClicked(self, node):
