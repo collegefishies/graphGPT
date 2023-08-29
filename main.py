@@ -29,6 +29,7 @@ class MainWindow(QMainWindow):
 		file_menu = menu_bar.addMenu("File")
 
 		actions = [
+			("New", "Ctrl+N", self.new_file),
 			("Open", "Ctrl+O", self.open_file_dialog),
 			("Save", "Ctrl+S", self.save_file),
 			("Save As", "Ctrl+Shift+S", self.save_file_dialog)
@@ -50,12 +51,20 @@ class MainWindow(QMainWindow):
 		self.chat_box = ChatBoxWidget()
 		layout.addWidget(self.chat_box)
 
-		tree_graph = TreeGraph()
-		layout.addWidget(tree_graph)
+		self.tree_graph = TreeGraph()
+		layout.addWidget(self.tree_graph)
 
 		#connect signals
-		self.chat_box.message_box.changed_signal.connect(tree_graph.update)
+		self.chat_box.message_box.changed_signal.connect(self.tree_graph.update)
 		
+
+	def new_file(self):
+		self.filename = None
+		self.chat_box.message_box.deleteConversation()
+		self.chat_box.message_box._initConv()
+		self.tree_graph.clear()
+		self.changed = False
+		self.update_title()
 
 	def open_file_dialog(self):
 		dialog = QFileDialog()

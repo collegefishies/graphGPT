@@ -117,7 +117,7 @@ class ConversationNode:
 		data = self.serialize()
 		curr_path = self.find_path_to_node(curr)
 		with open(filename, 'w') as file:
-			json.dump({"tree": data, "curr_path": curr_path}, file, indent=0)
+			json.dump({"tree": data, "curr_path": curr_path}, file, indent=4)
 
 	@staticmethod
 	def load_conversation_tree(filename="test.conv"):
