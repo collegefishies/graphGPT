@@ -19,7 +19,8 @@ def response(messages):
 
 	return completion.choices[0].message['content']
 
-
+def dummyResponse(*args, **kwargs):
+	return "This is robot."
 if __name__ == "__main__":
 	messages = [
 		{"role": "user", "content": "please respond."}

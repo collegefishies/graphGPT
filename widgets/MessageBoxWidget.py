@@ -7,11 +7,12 @@ Classes:
     - MessageBoxWidget: A QWidget subclass that holds and manages multiple MessageWidgets.
 """
 
-from PyQt6.QtWidgets import QWidget, QVBoxLayout, QStyle, QStyleOption, QSizePolicy
+from PyQt6.QtWidgets import QWidget, QVBoxLayout, QStyle, QStyleOption, QSizePolicy, QScrollArea
 from PyQt6.QtCore import Qt, pyqtSignal
 from PyQt6.QtGui import QPainter
 from . import MessageWidget
 from ConversationNode import ConversationNode
+from ChatGPT import response, dummyResponse
 class MessageBoxWidget(QWidget):
     """A container widget for multiple MessageWidgets.
 
@@ -43,7 +44,7 @@ class MessageBoxWidget(QWidget):
         self._setupLayout()
         self._setupStyleSheet()
         self.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Expanding)
-
+                
     def _setupLayout(self):
         """Setup the QVBoxLayout to house MessageWidgets."""
         self.layout = QVBoxLayout()
@@ -68,9 +69,9 @@ class MessageBoxWidget(QWidget):
         self.changed_signal.emit(self.root(), self.current_message.node)
     def root(self):
         return self.message_widgets[0].node
-    def addMessage(self, message, node=None):
+    def addMessage(self, message, node=None, robot=False):
         """Add a new MessageWidget with the given message."""
-        message_widget = MessageWidget(message)
+        message_widget = MessageWidget(message, robot=robot)
         if node is None:
             node = ConversationNode(message)
         message_widget.defineNode(node)
@@ -88,6 +89,12 @@ class MessageBoxWidget(QWidget):
         #print the root node
         root_node = self.message_widgets[0].node
         print(root_node)
+
+        if not robot:
+
+            # resp = response(messages)
+            resp = dummyResponse()
+            self.addMessage(message = resp, robot=True)
 
         self._markChange()
         
