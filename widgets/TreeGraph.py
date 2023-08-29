@@ -4,9 +4,10 @@
 Contains functions for displaying the graph of the conversation tree.
 '''
 from PyQt6.QtWidgets import QGraphicsView, QGraphicsScene, QGraphicsEllipseItem, QGraphicsLineItem, QApplication
-from PyQt6.QtCore import Qt, QRectF, QPointF
+from PyQt6.QtCore import Qt, QRectF, QPointF, pyqtSignal
 from PyQt6.QtGui import QBrush, QColor
 from collections import deque
+from ConversationNode import ConversationNode
 import sys
 
 class Node:
@@ -21,8 +22,15 @@ class Node:
         self.children.append(x)
 
 class ClickableCircle(QGraphicsEllipseItem):
+    clicked = pyqtSignal(ConversationNode)
+
+    def __init__(self, rect, node):
+        super().__init__(rect)
+        self.node = node
+
     def mousePressEvent(self, event):
-        print(f"Circle clicked! Conversation ID: {self.conversation_id}")
+        print(f"Circle clicked! Conversation ID: {self.node}")
+        self.clicked.emit(self.node)
 
 class TreeGraph(QGraphicsView):
     def __init__(self, *args, **kwargs):
@@ -33,28 +41,35 @@ class TreeGraph(QGraphicsView):
         #keep your copy of the root node.
         self.root = None
         self.curr = None
+        self.radius = 25
 
 
         # Set the scene
         self.setScene(self.scene)
 
-        # self.addCircle(25, 75, 4)
     def update(self, root, curr):
         print("Update called.")
         self.root = root
         self.curr = curr
         self.populateScene(root, curr)
 
-    def addCircle(self, x, y, conversation_id):
-        circle = ClickableCircle(QRectF(x, y, 50, 50))
-        if conversation_id == self.root:
-            circle.setBrush(QBrush(QColor("red")))
-        elif conversation_id == self.curr:
+
+    def addCircle(self, x, y, node):
+        r = self.radius
+        circle = ClickableCircle(QRectF(x, y, 2*r, 2*r), node)
+        if node == self.curr:
             circle.setBrush(QBrush(QColor("green")))
+        elif node == self.root:
+            circle.setBrush(QBrush(QColor("red")))
         else:
             circle.setBrush(QBrush(QColor("grey")))
-        circle.conversation_id = conversation_id
+        circle.node = node
+        circle.clicked.connect(self.onCircleClicke)
         self.scene.addItem(circle)
+
+    def onCircleClicked(self, node):
+        self.curr = node
+        self.update(self.root, self.curr)
 
     def populateScene(self, root, curr):
         self.clear()
@@ -62,21 +77,24 @@ class TreeGraph(QGraphicsView):
         queue = deque()
         seen = set()
         queue.appendleft((root, 0, 0))
-        dx, dy = 75, 75
+        r = self.radius
+        dx, dy = 3*r, 3*r
 
         while queue:
             node, x, y = queue.popleft()
 
             self.addCircle(x, y, node)
             i = 0
+            N = len(node.children)
+            mean = (N-1)*(3*r)/2
             for i,child in enumerate(node.children):
                 if child not in seen:
                     seen.add(child)
                     #draw line from parent to child
                     line = QGraphicsLineItem()
-                    line.setLine(x + 25, y + 25, x + i*dx + 25, y + dy + 25)
+                    line.setLine(x + r, y + r, x + i*dx + r-mean, y + dy + r)
                     self.scene.addItem(line)
-                    queue.append((child, x + i*dx, y + dy))
+                    queue.append((child, x + i*dx-mean, y + dy))
 
 
     def clear(self):

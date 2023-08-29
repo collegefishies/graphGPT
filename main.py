@@ -3,7 +3,7 @@
 '''
 import sys, os
 from PyQt6 import QtWidgets, QtGui
-from PyQt6.QtWidgets import QApplication, QMainWindow, QFileDialog
+from PyQt6.QtWidgets import QApplication, QMainWindow, QFileDialog, QScrollArea
 from widgets import ChatBoxWidget, TreeGraph
 from ConversationNode import ConversationNode
 
