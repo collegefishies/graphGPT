@@ -93,28 +93,40 @@ class TreeGraph(QGraphicsView):
         self.clear()
 
         queue = deque()
-        seen = set()
-        queue.appendleft((root, 0, 0))
+        # seen = set()
+        queue.append((root, None, None))
         r = self.radius
         dx, dy = 3*r, 3*r
-
+        depth = -1
         while queue:
-            node, x, y = queue.popleft()
+            print(queue)
+            #draw all the circles
+            width = len(queue)
+            depth += 1
+            mean = (width - 1) * (3*r)/2
+            #draw the parents circles
+            for i in range(len(queue)):
+                node, px, py = queue.popleft()
+                #calculate position of new node.
+                x = 0 if px is None else i*dx - mean
+                y = 0 if py is None else py + dy
 
-            self.addCircle(x, y, node)
-            i = 0
-            N = len(node.children)
-            mean = (N-1)*(3*r)/2
-            for i,child in enumerate(node.children):
-                if child not in seen:
-                    seen.add(child)
-                    #draw line from parent to child
-                    line = QGraphicsLineItem()
-                    line.setLine(x + r, y + r, x + i*dx + r-mean, y + dy + r)
-                    self.scene.addItem(line)
-                    queue.append((child, x + i*dx-mean, y + dy))
+                if px is not None and py is not None:
+                    self.addLine(x, y, px, py)
+                self.addCircle(x, y, node)
 
 
+                for child in node.children:
+                    #parents x, parents y
+                    px = x
+                    py = y
+                    queue.append((child, px, py))
+
+    def addLine(self, x1, y1, x2, y2):
+        r = self.radius
+        line = QGraphicsLineItem()
+        line.setLine(x1+r, y1+r, x2+r, y2+r)
+        self.scene.addItem(line)
     def clear(self):
         self.scene.clear()
 if __name__ == "__main__":
