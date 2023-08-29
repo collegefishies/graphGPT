@@ -26,13 +26,16 @@ class MessageBoxWidget(QWidget):
     def __init__(self, *args, **kwargs):
         """Initialize the MessageBoxWidget."""
         super().__init__(*args, **kwargs)
+        self._initConv()
+        self._initUI()
+
+    def _initConv(self):
         root_message_widget = MessageWidget("")
-        root_node = ConversationNode("", "root")
+        root_node = ConversationNode("Nothing goes here.", "root")
         root_message_widget.node = root_node
 
         self.message_widgets = [root_message_widget]
         self.current_message = root_message_widget
-        self._initUI()
         
     def _initUI(self):
         """Initialize the user interface components."""
@@ -54,15 +57,23 @@ class MessageBoxWidget(QWidget):
                 background-color: rgba(0, 0, 0, 0.2);
             }
         """)
-        
-    def addMessage(self, message):
+    
+    def _markChange(self):
+        chatbox = self.parent()
+        central_widget = chatbox.parent()
+        main_window = central_widget.parent()
+        main_window.changed = True
+        main_window.update_title()
+
+    def addMessage(self, message, node=None):
         """Add a new MessageWidget with the given message."""
         message_widget = MessageWidget(message)
-        node = ConversationNode(message)
+        if node is None:
+            node = ConversationNode(message)
         message_widget.defineNode(node)
 
         #connect the nodes
-        if self.current_message:
+        if self.current_message and node is not None:
             parent_node = self.current_message.node
             child_node = message_widget.node
             parent_node.add(child_node)
@@ -75,6 +86,38 @@ class MessageBoxWidget(QWidget):
         root_node = self.message_widgets[0].node
         print(root_node)
 
+        self._markChange()
+        
+
+    def _populate(self, root, curr):
+        """Populate the MessageBoxWidget with the given conversation nodes."""
+        self.deleteConversation()
+        self._initConv()
+        self.message_widgets[0].node = root
+        conversation = []
+        def __append_conversation(node):
+            if node.parent:
+                __append_conversation(node.parent)
+            if node:
+                conversation.append(node)
+        __append_conversation(curr)
+
+        #update the root node
+        root_node = conversation[0]
+        self.message_widgets[0].node = root_node
+        conversation = conversation[1:]
+        for node in conversation:
+            self.addMessage(message=node.text, node=node)
+
+
+
+
+    def deleteConversation(self):
+        while len(self.message_widgets) > 1:
+            self.popMessage()
+        root_node = self.message_widgets[0].node
+        root_node.delete()
+
     def popMessage(self):
         """Remove and return the oldest MessageWidget."""
         if len(self.message_widgets) > 1:
@@ -85,6 +128,7 @@ class MessageBoxWidget(QWidget):
             #update self.current_message
             self.current_message = self.message_widgets[-1] if self.message_widgets else None
 
+            self._markChange()
             return message_widget
 
     def paintEvent(self, e):

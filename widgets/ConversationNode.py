@@ -76,10 +76,16 @@ class ConversationNode:
 			msg (ConversationNode): The child node to add.
 		"""
 		assert isinstance(msg, ConversationNode)
-		self.children.append(msg)
-		msg.depth = self.depth + 1
-		msg.parent = self
+		if msg not in self.children:
+			self.children.append(msg)
+			msg.depth = self.depth + 1
+			msg.parent = self
 
+	def delete(self):
+		for child in self.children:
+			child.delete()
+			del child
+			
 	def print_conversation(self):
 		"""
 		Prints the conversation from the current node to the root node.

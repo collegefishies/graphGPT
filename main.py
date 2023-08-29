@@ -5,6 +5,7 @@ import sys, os
 from PyQt6 import QtWidgets, QtGui
 from PyQt6.QtWidgets import QApplication, QMainWindow, QFileDialog
 from widgets import ChatBoxWidget, TreeGraph
+from ConversationNode import ConversationNode
 
 class MainWindow(QMainWindow):
 	def __init__(self):
@@ -58,6 +59,7 @@ class MainWindow(QMainWindow):
 		filename, _ = QFileDialog.getOpenFileName(self, "Open File", "", "All Files (*);;Conversation Files (*.conv)", options=options)
 		if filename:
 			self.load_file(filename)
+			self.set_window_title()
 
 	def save_file_dialog(self):
 		dialog = QFileDialog()
@@ -66,6 +68,9 @@ class MainWindow(QMainWindow):
 		if filename:
 			self.filename = filename
 			self.save_file()
+			self.set_window_title()
+			
+
 
 	def load_file(self, filename):
 		self.filename = filename
@@ -73,6 +78,15 @@ class MainWindow(QMainWindow):
 		#use short filename
 		filename = filename.split("/")[-1]
 		self.setWindowTitle(f"graphGPT - {filename}")
+
+		#load the conversation nodes
+		root, curr = ConversationNode.load_conversation_tree(filename)
+
+		#populate the widgets
+		self.chat_box.message_box._populate(root, curr)
+		self.changed = False
+		self.update_title()
+
 
 	def update_title(self):
 		if self.filename and self.changed:
