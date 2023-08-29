@@ -19,12 +19,12 @@ class MessageWidget(QWidget):
         - None
     """
 
-    def __init__(self, message, *args, **kwargs):
+    def __init__(self, message, *args, robot=False, **kwargs):
         """Initialize the MessageWidget with a given message."""
         super().__init__(*args, **kwargs)
         self.node = None
         self._initConstants()
-        self._initUI(message)
+        self._initUI(message, robot)
 
         
     def _initConstants(self):
@@ -32,15 +32,18 @@ class MessageWidget(QWidget):
         self.min_height = 50
         self.message_padding = 10
         
-    def _initUI(self, message,):
+    def _initUI(self, message, robot):
         """Initialize the user interface components."""
-        self._createUserIcon()
+        self._createUserIcon(robot)
         self._createMessageLabel(message)
         self._setupLayout()
 
-    def _createUserIcon(self):
+    def _createUserIcon(self, robot):
         """Create user icon."""
-        self.user_icon = QLabel("👤")
+        if not robot:
+            self.user_icon = QLabel("👤")
+        else:
+            self.user_icon = QLabel("🤖")
 
     def defineNode(self, node):
         self.node = node
