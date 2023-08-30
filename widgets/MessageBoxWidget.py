@@ -96,7 +96,11 @@ class MessageBoxWidget(QWidget):
         """Add a new MessageWidget with the given message."""
         message_widget = MessageWidget(message, robot=robot)
         if node is None:
-            node = ConversationNode(message)
+            if robot:
+                user = "assistant"
+            else:
+                user = "user"
+            node = ConversationNode(message, user=user)
         message_widget.defineNode(node)
 
         #connect the nodes
@@ -117,8 +121,12 @@ class MessageBoxWidget(QWidget):
 
         if not robot and not load:
 
-            # resp = response(messages)
-            resp = dummyResponse()
+            messages = self.current_message.node.return_conversation()
+            messages = messages[1:]
+            #update syntax
+            messages = [{'role':usr, 'content':msg} for usr,msg in messages]
+            print(messages)
+            resp = response(messages)
             self.addMessage(message = resp, robot=True)
 
         self._markChange()
@@ -145,7 +153,8 @@ class MessageBoxWidget(QWidget):
         self.message_widgets[0].node = root_node
         conversation = conversation[1:]
         for node in conversation:
-            self.addMessage(message=node.text, node=node, load=True)
+            robot = node.user == 'assistant'
+            self.addMessage(message=node.text, node=node, load=True, robot=robot)
 
 
 

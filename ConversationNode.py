@@ -48,7 +48,7 @@ class ConversationNode:
 		parent (ConversationNode): The parent node.
 		children (list): The child nodes.
 	"""
-	def __init__(self, text="None", user="N/A"):
+	def __init__(self, text="None", user="system"):
 		"""
 		Initializes a ConversationNode with text and user.
 

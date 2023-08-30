@@ -84,7 +84,7 @@ class MainWindow(QMainWindow):
     def show_file_dialog(self, title, action_type):
         dialog = QFileDialog()
         options = dialog.options()
-        file_types = "All Files (*);;Conversation Files (*.conv)"
+        file_types = "Conversation Files (*.conv);;All Files (*)"
         if action_type == "Open":
             return QFileDialog.getOpenFileName(self, title, "", file_types, options=options)
         else:
