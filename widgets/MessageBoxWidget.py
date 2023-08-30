@@ -88,7 +88,7 @@ class MessageBoxWidget(QWidget):
         self.changed_signal.emit(self.root(), self.current_message.node)
     def root(self):
         return self.message_widgets[0].node
-    def addMessage(self, message, node=None, robot=False):
+    def addMessage(self, message, node=None, robot=False, load=False):
         """Add a new MessageWidget with the given message."""
         message_widget = MessageWidget(message, robot=robot)
         if node is None:
@@ -111,7 +111,7 @@ class MessageBoxWidget(QWidget):
 
 
 
-        if not robot:
+        if not robot and not load:
 
             # resp = response(messages)
             resp = dummyResponse()
@@ -141,7 +141,7 @@ class MessageBoxWidget(QWidget):
         self.message_widgets[0].node = root_node
         conversation = conversation[1:]
         for node in conversation:
-            self.addMessage(message=node.text, node=node)
+            self.addMessage(message=node.text, node=node, load=True)
 
 
 

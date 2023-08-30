@@ -37,7 +37,7 @@ Tutorial:
 
 import json
 import tiktoken
-
+encoding = tiktoken.encoding_for_model("gpt-3.5-turbo")
 class ConversationNode:
 	"""
 	Represents a node in a conversation tree.
