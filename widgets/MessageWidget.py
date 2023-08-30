@@ -7,7 +7,7 @@ Classes:
     - MessageWidget: A QWidget subclass that displays a message alongside a user icon.
 """
 
-from PyQt6.QtWidgets import QWidget, QLabel, QPushButton, QHBoxLayout
+from PyQt6.QtWidgets import QWidget, QLabel, QPushButton, QHBoxLayout, QSizePolicy
 from ConversationNode import ConversationNode
 
 class MessageWidget(QWidget):
@@ -51,8 +51,10 @@ class MessageWidget(QWidget):
         """Create message label."""
         self.message_label = QLabel(message)
         self.message_label.setWordWrap(True)
-        self.message_label.setMinimumHeight(self.min_height)
+        # self.message_label.setMinimumHeight(self.min_height)
         self.message_label.setContentsMargins(0, self.message_padding, 0, self.message_padding)
+        sizePolicy = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
+        self.message_label.setSizePolicy(sizePolicy)
 
     def _setupLayout(self):
         """Setup the QHBoxLayout for the widget."""
