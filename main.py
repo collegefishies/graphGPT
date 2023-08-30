@@ -52,6 +52,7 @@ class MainWindow(QMainWindow):
         layout.addWidget(self.chat_box)
 
         self.tree_graph = TreeGraph()
+        self.tree_graph.connect_message_box(self.chat_box.message_box)
         layout.addWidget(self.tree_graph)
         self.connect_signals()
 
@@ -66,16 +67,6 @@ class MainWindow(QMainWindow):
         self.changed = False
         self.update_title()
 
-    def open_file_dialog(self):
-        # Moved dialog options within the method for encapsulation
-        dialog = QFileDialog()
-        options = dialog.options()
-        filename, _ = QFileDialog.getOpenFileName(self, "Open File", "", "All Files (*);;Conversation Files (*.conv)", options=options)
-        if filename:
-            self.load_file(filename)
-            self.set_window_title()
-
-    # ... Previous code unchanged
 
     def open_file_dialog(self):
         filename, _ = self.show_file_dialog("Open File", "Open")
@@ -148,6 +139,6 @@ def main():
     sys.exit(app.exec())
 
 if __name__ == "__main__":
-	
+
     print("##### Main Start #####")
     main()

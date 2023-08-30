@@ -86,6 +86,10 @@ class MessageBoxWidget(QWidget):
         main_window.changed = True
         main_window.update_title()
         self.changed_signal.emit(self.root(), self.current_message.node)
+    def _setCurrentMessage(self, curr):
+        print("Called.")
+        self.current_message = curr
+        self._populate(self.root(), curr)
     def root(self):
         return self.message_widgets[0].node
     def addMessage(self, message, node=None, robot=False, load=False):

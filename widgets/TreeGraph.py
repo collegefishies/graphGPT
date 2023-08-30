@@ -51,6 +51,7 @@ class ClickableCircle(QGraphicsObject):
         self.update()  # Trigger repaint
 
 class TreeGraph(QGraphicsView):
+    changed_curr = pyqtSignal(ConversationNode)
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -60,11 +61,15 @@ class TreeGraph(QGraphicsView):
         self.root = None
         self.curr = None
         self.radius = 25
-
+        self.message_box = None
 
         # Set the scene
         self.setScene(self.scene)
 
+    def connect_message_box(self, message_box):
+        self.message_box = message_box
+        self.changed_curr.connect(self.message_box._setCurrentMessage)
+        
     def update(self, root, curr):
         print("Update called.")
         self.root = root
@@ -88,6 +93,7 @@ class TreeGraph(QGraphicsView):
     def onCircleClicked(self, node):
         self.curr = node
         self.update(self.root, self.curr)
+        self.changed_curr.emit(self.curr)
 
     def populateScene(self, root, curr):
         self.clear()
