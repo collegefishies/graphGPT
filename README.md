@@ -16,9 +16,7 @@ If you would like to support this project and more like it, you can buy me a cof
 Make your own .env file with your `OPENAI_API_KEY`, and then run main.py. If you have make you can just run `make auto`, to run the GUI.
 
 # Installation
-`pip install` the prerequisites
-      PyQt6
-      openai
-      tiktoken
-      
-
+`pip install` the prerequisites:
+      `PyQt6`,
+      `openai`,
+      `tiktoken`.
