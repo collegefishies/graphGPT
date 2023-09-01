@@ -3,7 +3,7 @@ This is a program for learning/debugging with ChatGPT. It knows a lot, but it's 
 
 It uses the magics of Node-Edge graphs to keep track of everything! So you can go back in time, and start new branching conversations to tame your endless curiosity!
 
-If you would like to support this project and more like it, you can buy me a coffee at [Ko-Fi](ko-fi.com/collegefishies).
+If you would like to support this project and more like it, you can buy me a coffee at [Ko-Fi](https://www.ko-fi.com/collegefishies).
 
 # Features
   - Ability to keep track of arbitrarily complicated conversations!
