@@ -6,3 +6,7 @@ docs:
 
 count:
 	find . -name "*.py" | xargs wc -l
+
+clean:
+	rm -rf ./build/
+	rm -rf ./dist/

@@ -1,3 +1,10 @@
+'''
+To install on M1 run this command.
+
+    pip uninstall pyinstaller
+    PYINSTALLER_COMPILE_BOOTLOADER=1 pip install git+https://github.com/pyinstaller/pyinstaller.git@develop
+'''
+
 # -*- mode: python ; coding: utf-8 -*-
 import sys
 from pathlib import Path
@@ -48,3 +55,8 @@ coll = COLLECT(
     upx_exclude=[],
     name='main',
 )
+
+app = BUNDLE(coll,
+    name='graphGPT.app',
+    icon='graphGPT.icns',
+    bundle_identifier=None,)
