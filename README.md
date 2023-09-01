@@ -5,6 +5,7 @@ It uses the magics of Node-Edge graphs to keep track of everything! So you can g
 
 If you would like to support this project and more like it, you can buy me a coffee at [Ko-Fi](https://www.ko-fi.com/collegefishies).
 
+![Screenshot](imgs/intro)
 # Features
   - Ability to keep track of arbitrarily complicated conversations!
   - Save/Load! your conversations for good record keeping! Now you can keep notes that openAI has no control over!
