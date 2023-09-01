@@ -13,7 +13,7 @@ If you would like to support this project and more like it, you can buy me a cof
 
 
 # Usage
-Make your own .env file with your `OPENAI_API_KEY`, and then run main.py. If you have make you can just run `make auto`, to run the GUI.
+Make your own .env file with your `OPENAI_API_KEY`, and then run main.py. If you have make you can just run `make auto` on mac, if you have `entr` installed, to run the GUI.
 If there's desire to make a more user friendly version with no API-key management let me know!
 
 # Installation
