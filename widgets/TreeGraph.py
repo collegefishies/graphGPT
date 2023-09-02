@@ -5,7 +5,7 @@ Contains functions for displaying the graph of the conversation tree.
 '''
 from PyQt6.QtWidgets import QGraphicsView, QGraphicsScene, QGraphicsEllipseItem, QGraphicsLineItem, QApplication, QGraphicsObject
 from PyQt6.QtCore import Qt, QRectF, QPointF, pyqtSignal
-from PyQt6.QtGui import QBrush, QColor, QPainter
+from PyQt6.QtGui import QBrush, QColor, QPainter, QPainterPath
 from collections import deque
 from ConversationNode import ConversationNode
 import sys
@@ -95,42 +95,48 @@ class TreeGraph(QGraphicsView):
         self.update(self.root, self.curr)
         self.changed_curr.emit(self.curr)
 
+    def calculate_subtree_width(self,node):
+        if not node.children:
+            return 1
+        return sum(self.calculate_subtree_width(child) for child in node.children)
+    def addBezierCurve(self, x1, y1, x2, y2):
+        r = self.radius
+        path = QPainterPath()
+        path.moveTo(x1 + r, y1 + r)
+        ctrl_x, ctrl_y = (x1 + x2) / 2, y1 + r
+        path.quadTo(ctrl_x + r, ctrl_y, x2 + r, y2 + r)
+        self.scene.addPath(path)
+    def draw_tree(self, node, x, y, layer_width, draw_lines=True):
+        if not node.children:
+            if not draw_lines:
+                self.addCircle(x, y, node)
+            return
+
+        offset = x - layer_width / 2
+        for child in node.children:
+            child_width = self.calculate_subtree_width(child) * self.radius * 3
+            child_x = offset + child_width / 2
+            child_y = y + self.radius * 3
+
+            if draw_lines:
+                # Draw Bezier curve between parent and child
+                self.addBezierCurve(x, y, child_x, child_y)
+            else:
+                # Draw the node at (x, y)
+                self.addCircle(x, y, node)
+
+            # Draw the subtree rooted at child
+            self.draw_tree(child, child_x, child_y, child_width, draw_lines)
+
+            offset += child_width
+
     def populateScene(self, root, curr):
         self.clear()
         
-        def calculate_subtree_width(node):
-            if not node.children:
-                return 1
-            return sum(calculate_subtree_width(child) for child in node.children)
 
-        def draw_tree(node, x, y, layer_width):
-            # Draw the node at (x, y)
-            self.addCircle(x, y, node)
-            
-            # If leaf node, stop recursion
-            if not node.children:
-                return
-            
-            # Initial offset for the children
-            offset = x - layer_width / 2
-
-            for child in node.children:
-                child_width = calculate_subtree_width(child) * self.radius * 3
-                child_x = offset + child_width / 2
-                child_y = y + self.radius * 3
-                
-                # Draw line between parent and child
-                self.addLine(x, y, child_x, child_y)
-                
-                # Draw the subtree rooted at child
-                draw_tree(child, child_x, child_y, child_width)
-                
-                # Update the offset
-                offset += child_width
-
-        root_width = calculate_subtree_width(root) * self.radius * 3
-        draw_tree(root, 0, 0, root_width)
-
+        root_width = self.calculate_subtree_width(root) * self.radius * 3
+        self.draw_tree(root, 0, 0, root_width, True)
+        self.draw_tree(root, 0, 0, root_width, False)
 
 
 
