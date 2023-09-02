@@ -3,7 +3,7 @@
 
 Contains functions for displaying the graph of the conversation tree.
 '''
-from PyQt6.QtWidgets import QGraphicsView, QGraphicsScene, QGraphicsEllipseItem, QGraphicsLineItem, QApplication, QGraphicsObject
+from PyQt6.QtWidgets import QGraphicsView, QGraphicsScene, QGraphicsEllipseItem, QGraphicsLineItem, QApplication, QGraphicsObject, QGraphicsDropShadowEffect
 from PyQt6.QtCore import Qt, QRectF, QPointF, pyqtSignal
 from PyQt6.QtGui import QBrush, QColor, QPainter, QPainterPath
 from collections import deque
@@ -30,6 +30,14 @@ class ClickableCircle(QGraphicsObject):
         self.rect = rect
         self.brush = QBrush(QColor("blue"))
 
+        # Add drop shadow effect            
+        self.shadow = QGraphicsDropShadowEffect()
+        self.shadow.setBlurRadius(15)  # Adjust the blur radius as you like
+        self.shadow.setXOffset(2)      # Horizontal offset
+        self.shadow.setYOffset(2)      # Vertical offset
+        self.shadow.setColor(QColor("gray"))  # Shadow color
+        self.setGraphicsEffect(self.shadow)
+
     def boundingRect(self):
         return self.rect
 
@@ -46,9 +54,18 @@ class ClickableCircle(QGraphicsObject):
     def mousePressEvent(self, event):
         print(f"Circle clicked! Conversation ID: {self.node}")
         self.clicked.emit(self.node)
-    def setFillColor(self, color_name):
-        self.brush.setColor(QColor(color_name))
+    def setFillColor(self, color):
+        if isinstance(color, str):
+            self.brush.setColor(QColor(color))
+        elif isinstance(color, tuple):
+            if len(color) == 3:
+                self.brush.setColor(QColor(color[0], color[1], color[2]))
+            elif len(color) == 4:
+                self.brush.setColor(QColor(color[0], color[1], color[2], color[3]))
+        elif isinstance(color, QColor):
+            self.brush.setColor(color)
         self.update()  # Trigger repaint
+
 
 class TreeGraph(QGraphicsView):
     changed_curr = pyqtSignal(ConversationNode)
@@ -80,12 +97,19 @@ class TreeGraph(QGraphicsView):
     def addCircle(self, x, y, node):
         r = self.radius
         circle = ClickableCircle(QRectF(x, y, 2*r, 2*r), node)
+        circle.shadow.setXOffset(5)      # Horizontal offset
+        circle.shadow.setYOffset(5)      # Vertical offset
+        
         if node == self.curr:
             circle.setFillColor("green")
+            
         elif node == self.root:
             circle.setFillColor("red")
         else:
-            circle.setFillColor("grey")
+            circle.setFillColor((200,200,200,255))
+            circle.shadow.setXOffset(2)      # Horizontal offset
+            circle.shadow.setYOffset(2)      # Vertical offset
+        
         circle.node = node
         circle.clicked.connect(self.onCircleClicked)
         self.scene.addItem(circle)
