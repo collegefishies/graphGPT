@@ -97,46 +97,41 @@ class TreeGraph(QGraphicsView):
 
     def populateScene(self, root, curr):
         self.clear()
+        
+        def calculate_subtree_width(node):
+            if not node.children:
+                return 1
+            return sum(calculate_subtree_width(child) for child in node.children)
 
-        _pass = "line"
-        while _pass != "done":
-            queue = deque()
-            seen = set()
-            queue.append((root, None, None))
-            r = self.radius
-            dx, dy = 3*r, 3*r
-            depth = -1
-            while queue:
-                print(queue)
-                #draw all the circles
-                width = len(queue)
-                depth += 1
-                mean = (width - 1) * (3*r)/2
-                #draw the parents circles
-                for i in range(len(queue)):
-                    node, px, py = queue.popleft()
-                    if node not in seen:
-                        seen.add(node)
-                        #calculate position of new node.
-                        x = 0 if px is None else i*dx - mean
-                        y = 0 if py is None else py + dy
-                        
-                        if _pass == "line":
-                            if px is not None and py is not None:
-                                self.addLine(x, y, px, py)
-                        else:
-                            self.addCircle(x, y, node)
+        def draw_tree(node, x, y, layer_width):
+            # Draw the node at (x, y)
+            self.addCircle(x, y, node)
+            
+            # If leaf node, stop recursion
+            if not node.children:
+                return
+            
+            # Initial offset for the children
+            offset = x - layer_width / 2
+
+            for child in node.children:
+                child_width = calculate_subtree_width(child) * self.radius * 3
+                child_x = offset + child_width / 2
+                child_y = y + self.radius * 3
+                
+                # Draw line between parent and child
+                self.addLine(x, y, child_x, child_y)
+                
+                # Draw the subtree rooted at child
+                draw_tree(child, child_x, child_y, child_width)
+                
+                # Update the offset
+                offset += child_width
+
+        root_width = calculate_subtree_width(root) * self.radius * 3
+        draw_tree(root, 0, 0, root_width)
 
 
-                        for child in node.children:
-                            #parents x, parents y
-                            px = x
-                            py = y
-                            queue.append((child, px, py))
-            if _pass == "line":
-                _pass = "circle"
-            else:
-                _pass = "done"
 
 
     def addLine(self, x1, y1, x2, y2):
