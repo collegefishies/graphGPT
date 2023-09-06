@@ -178,6 +178,9 @@ class MessageBoxWidget(QWidget):
             self._markChange()
             return message_widget
 
+    def queueMessage(self, message):
+        self.addMessage(message, robot=False, load=True)
+
     def paintEvent(self, e):
         """Ensure the custom stylesheet works properly."""
         option = QStyleOption()

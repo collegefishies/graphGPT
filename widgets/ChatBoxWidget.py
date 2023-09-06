@@ -41,9 +41,14 @@ class ChatBoxWidget(QWidget):
         """Add a new message to the MessageBoxWidget."""
         new_message = self.input_box.text_edit.toPlainText()
         if new_message:
+            new_message = new_message.rstrip()
             self.message_box.addMessage(new_message)
             self.input_box.text_edit.clear()
 
-    def popMessage(self):
+    def queueMessage(self):
         """Remove and return the oldest message from MessageBoxWidget."""
-        return self.message_box.popMessage()
+        new_message = self.input_box.text_edit.toPlainText()
+        if new_message:
+            new_message = new_message.rstrip()
+            self.message_box.queueMessage(new_message)
+            self.input_box.text_edit.clear()

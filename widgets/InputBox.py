@@ -15,7 +15,7 @@ class InputBox(QWidget):
     
     Methods:
         - handleSend: Triggered to add a new message to the chat.
-        - handlePop: Triggered to remove the oldest message from the chat.
+        - handleQueue: Triggered to add a new message to the chat with no response.
     """
     
     def __init__(self, *args, **kwargs):
@@ -37,15 +37,15 @@ class InputBox(QWidget):
     def _createButtons(self):
         """Create Send and Pop buttons."""
         self.sendButton = QPushButton("Send")
-        self.popButton = QPushButton("Pop")
+        self.queueButton = QPushButton("Queue")
         self.sendButton.clicked.connect(self.handleSend)
-        self.popButton.clicked.connect(self.handlePop)
+        self.queueButton.clicked.connect(self.handleQueue)
         
     def _setupLayout(self):
         """Setup QHBoxLayout to house the text edit and buttons."""
         layout = QHBoxLayout()
         layout.addWidget(self.text_edit)
-        layout.addWidget(self.popButton)
+        layout.addWidget(self.queueButton)
         layout.addWidget(self.sendButton)
         self.setLayout(layout)
         self.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Preferred)
@@ -54,6 +54,6 @@ class InputBox(QWidget):
         """Trigger to add a new message to the MessageBoxWidget."""
         self.parent().addNewMessage()
 
-    def handlePop(self):
+    def handleQueue(self):
         """Trigger to remove the oldest message from the MessageBoxWidget."""
-        self.parent().popMessage()
+        self.parent().queueMessage()
